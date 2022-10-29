@@ -1,0 +1,72 @@
+{
+	"music_folder": "...",
+	"encoders": {
+		"ffmpeg_location": "PATH"
+	},
+	"presets": {
+		"160_opus": {
+			"codec": "libopus",
+			"bitrate": 160
+		}, 
+		"160_aac": {
+			"codec": "libfdk_aac",
+			"bitrate": 160
+		},
+		"128_opus": {
+			"codec": "libopus",
+			"bitrate": 128
+		},
+		"128_aac": {
+			"codec": "libfdk_aac",
+			"bitrate": 128
+		},
+		"96_opus": {
+			"codec": "libopus",
+			"bitrate": 96
+		},
+		"96_aac": {
+			"codec": "libfdk_aac",
+			"bitrate": 96
+		},
+		"64_opus": {
+			"codec": "libopus",
+			"bitrate": 64
+		},
+		"64_heaac": {
+			"codec": "libfdk_aac",
+			"profile": "aac_he",
+			"bitrate": 64
+		},
+		"32_opus_mono": {
+			"codec": "libopus",
+			"bitrate": 32,
+			"channels": 1
+		},
+		"32_heaac": {
+			"codec": "libfdk_aac",
+			"profile": "aac_he",
+			"bitrate": 32
+		},
+		"32_heaac_mono": {
+			"codec": "libfdk_aac",
+			"profile": "aac_he",
+			"bitrate": 32,
+			"channels": 1
+		},
+		"32_heaacv2": {
+			"codec": "libfdk_aac",
+			"profile": "aac_he_v2",
+			"bitrate": 32
+		},
+		"24_heaacv2": {
+			"codec": "libfdk_aac",
+			"profile": "aac_he_v2",
+			"bitrate": 24
+		},
+		"16_heaacv2": {
+			"codec": "libfdk_aac",
+			"profile": "aac_he_v2",
+			"bitrate": 16
+		}
+	}
+}

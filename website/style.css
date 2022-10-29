@@ -1,0 +1,50 @@
+.noback {
+    border: none;
+    background: none;
+    cursor: pointer;
+    margin: 0;
+    padding: 0px;
+}
+
+.bottom {
+	position: fixed;
+	bottom: 0;
+	left: 0px;
+	right: 0px;
+}
+
+.center {
+	display: flex;
+	background: #aaa;
+	min-height: 7rem;
+	padding: 0px;
+	justify-content: center;
+	align-items: center;
+}
+
+.blackbackground {
+	background: #000;
+}
+
+td {
+	color: #ccc;
+	border-bottom: 1px solid #fff;
+	width: 50%;
+	font-family: Roboto;
+}
+
+.songs {
+	width: 100%;
+}
+
+.progressbar {
+	width: 100%;
+	background-color: gray;
+}
+
+@font-face {
+	font-family: "Roboto";
+	src: url("Roboto.ttf");
+	font-weight: 400;
+	font-style: normal;
+}
