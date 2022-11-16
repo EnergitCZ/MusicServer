@@ -1,11 +1,5 @@
 """
 A simple music server written in Python
-
-Issues:
- - Currently supports only MP3s as i didn't add support for anything else
- - On worse connections might not work properly (for some reason)
- - Doesn't work on Firefox as it does not support Matroska containers
- - Works only on one device at a time
 """
 
 import json
@@ -22,22 +16,6 @@ if settings["encoders"]["ffmpeg_location"] == "PATH": # Get wrapper of FFmpeg
 else:
 	relpath = os.path.join(settings["encoders"]["ffmpeg_location"], "ffmpeg")
 	ffmpeg = wrappers.FFmpeg(os.realpath(relpath))
-
-
-# UNUSED
-"""
-if settings["encoders"]["exhale_location"] == "PATH":	# Get wrapper of Exhale
-	exhale = wrappers.Exhale("exhale", ffmpeg.ffmpeg_path)
-else:
-	relpath = os.path.join(settings["encoders"]["exhale_location"], "exhale")
-	exhale = wrappers.Exhale(os.path.realpath(relpath), ffmpeg.ffmpeg_path)
-
-if settings["encoders"]["fdkaac_location"] == "PATH":	# Get wrapper of FdkAAC
-	fdkaac = wrappers.FdkAAC("fdkaac", ffmpeg.ffmpeg_path)
-else:
-	relpath = os.path.join(settings["encoders"]["fdkaac_location"], "fdkaac")
-	fdkaac = wrappers.FdkAAC(os.path.realpath(relpath), ffmpeg.ffmpeg_path)
-"""
 
 from libs.datatypes import Database
 
