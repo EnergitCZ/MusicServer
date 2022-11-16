@@ -13,14 +13,48 @@ let preset = localStorage.getItem("preset")
 if (!preset) {
 	preset = "128_opus"
 }
-let audioplayer = new Audio()
+let audioplayer1 = new Audio()
+let audioplayer2 = new Audio()
+let cap = 1
 let setup = false
 let progressbar
 
 window.onload = () => {
-	updateSongs()
+	updateSongs(40)
 	updateSongList()
 	progressbar = document.getElementById("progressbar")
+}
+
+function getCurrentAudioPlayer() {
+	if (cap == 1) {
+		return audioplayer1
+	} else {
+		return audioplayer2
+	}
+}
+
+function getOtherAudioPlayer() {
+	if (cap == 1) {
+		return audioplayer2
+	} else {
+		return audioplayer1
+	}
+}
+
+function changeAudioPlayer() {
+	if (cap == 1) {
+		cap = 2
+	} else {
+		cap = 1
+	}
+}
+
+function checkFF() {
+	let ua = navigator.userAgent
+	if (ua.match(/firefox|fxios/i)) {
+		return true
+	}
+	return false
 }
 
 function httpGet(url) {
@@ -33,7 +67,7 @@ function httpGet(url) {
 function reverseArray(array) {
 	let newArr = [];
 	for(i = array.length-1; i >= 0; i--) {
-		newArr.push(array[i]);
+		newArr.push(array[i])
 	}
 	return newArr;
 }
@@ -42,7 +76,7 @@ function appendSongList(item) {
 	if (item) {
 		split = item.split("\n")
 		split[1] = JSON.parse(split[1])
-		songlist.push(split)
+		songlist.unshift(split)
 	}
 }
 
@@ -92,47 +126,64 @@ function setSongActive(song) {
 	document.title = song[1]["artist"][0] + " - " + song[1]["title"][0]
 }
 
-function updateSongs() {
-	let unparsed = httpGet("http://"+ip+"/getRandomFiles/50")
+function updateSongs(amount) {
+	let unparsed = httpGet("http://"+ip+"/getRandomFiles/" + amount.toString())
 	let songs = unparsed.split("\n\n")
-	songlist = []
+	//songlist = []
 	songs.forEach(appendSongList)
 }
 
-function play() {
-	setup = true
-	updateSongList()
-	song = songlist.pop()
-	setSongActive(song)
-	src = "http://"+ip+"/getEncFile/" + preset + "/" + encodeURIComponent(song[0].substring(1))
-	audioplayer.src = src
-	audioplayer.load()
-	audioplayer.play()
-	if (songlist.length == 0) {
-		updateSongs()
+let play
+
+if (checkFF()) {
+	play = function () {
+		if (!setup) {
+			updateSongList()
+			song = songlist.pop()
+			setSongActive(song)
+			src = "http://"+ip+"/getEncFile/" + preset + "/" + encodeURIComponent(song[0].substring(1))
+			getCurrentAudioPlayer().src = src
+			getCurrentAudioPlayer().load()
+			getCurrentAudioPlayer().play()
+			src = "http://"+ip+"/getEncFile/" + preset + "/" + encodeURIComponent(songlist.at(-1)[0].substring(1))
+			getOtherAudioPlayer().src = src
+			getOtherAudioPlayer().load()
+		} else {
+			updateSongList()
+			song = songlist.pop()
+			setSongActive(song)
+			changeAudioPlayer()
+			getOtherAudioPlayer().pause()
+			getCurrentAudioPlayer().play()
+			src = "http://"+ip+"/getEncFile/" + preset + "/" + encodeURIComponent(songlist.at(-1)[0].substring(1))
+			getOtherAudioPlayer().src = src
+			getOtherAudioPlayer().load()
+		}
+		setup = true
+	}
+} else {
+	play = function () {
 		updateSongList()
+		song = songlist.pop()
+		setSongActive(song)
+		src = "http://"+ip+"/getEncFile/" + preset + "/" + encodeURIComponent(song[0].substring(1))
+		getCurrentAudioPlayer().src = src
+		getCurrentAudioPlayer().load()
+		getCurrentAudioPlayer().play()
+		setup = true
 	}
 }
-audioplayer.onended = play
+audioplayer1.onended = play
+audioplayer2.onended = play
 
 function playBtn() {
 	if (!setup) {
 		play()
-	} else if (audioplayer.paused) {
-		audioplayer.play()
+	} else if (getCurrentAudioPlayer().paused) {
+		getCurrentAudioPlayer().play()
 	} else {
-		audioplayer.pause()
+		getCurrentAudioPlayer().pause()
 	}
-}
-
-audioplayer.onpause = () => {
-	let playbtn = document.getElementById("playbuttonimg")
-	playbtn.src = "play-icon.svg"
-}
-
-audioplayer.onplay = () => {
-	let playbtn = document.getElementById("playbuttonimg")
-	playbtn.src = "pause-icon.svg"
 }
 
 window.onkeydown = (e) => {
@@ -143,7 +194,17 @@ window.onkeydown = (e) => {
 }
 
 setInterval(() => {
-	progressbar.value = audioplayer.currentTime
+	if (songlist.length < 30 && setup) {
+		updateSongs(10)
+	}
+	if (getCurrentAudioPlayer().paused) {
+		let playbtn = document.getElementById("playbuttonimg")
+		playbtn.src = "play-icon.svg"
+	} else {
+		let playbtn = document.getElementById("playbuttonimg")
+		playbtn.src = "pause-icon.svg"
+	}
+	progressbar.value = getCurrentAudioPlayer().currentTime
 }, 100)
 
 function settings() {
