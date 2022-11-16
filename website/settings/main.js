@@ -17,7 +17,7 @@ function httpGet(url) {
 }
 
 window.onload = () => {
-	document.getElementById("ip").value = ip
+	document.getElementById("ip").value = ip.substring(0, ip.indexOf(":"))
 	document.getElementById("port").value = port
 	let presets = httpGet("http://" + ip + "/getPresets")
 	let presetl = presets.split("\n")

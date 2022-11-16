@@ -67,6 +67,8 @@ function updateSongList() {
 			} else {
 				td3.innerText = td3.innerText + m + ":"
 			}
+		} else {
+			td3.innerText = td3.innerText + "00:"
 		}
 		var s = Math.floor(item[1]["duration"] % 3600 % 60);
 		if (s < 10) {
@@ -102,7 +104,7 @@ function play() {
 	updateSongList()
 	song = songlist.pop()
 	setSongActive(song)
-	src = "http://"+ip+"/getEncFile/" + preset + "/" + encodeURIComponent(song[0].substring(1) + ".mka")
+	src = "http://"+ip+"/getEncFile/" + preset + "/" + encodeURIComponent(song[0].substring(1))
 	audioplayer.src = src
 	audioplayer.load()
 	audioplayer.play()

@@ -16,8 +16,7 @@ SC 2
 """
 
 import pickle, os, os.path, deflate, random
-from mutagen.easyid3 import EasyID3
-from mutagen.mp3 import MP3
+import mutagen
 from datetime import datetime
 from io import BytesIO
 
@@ -63,12 +62,14 @@ class Database:
 		self.db = {}
 		for root, dirs, files in os.walk(self.path):
 			for f in files:
-				if f.endswith(".mp3"):
-					path = os.path.join(root, f)
-					mp3 = MP3(path, ID3=EasyID3)
-					md = dict(mp3)
-					md["duration"] = mp3.info.length
-					self.db[path.replace("\\", "/").replace(self.path, "")] = md
+				path = os.path.join(root, f)
+				fid = mutagen.File(path)
+				if not fid:
+					print("Unable to parse file {}".format(path))
+					continue
+				fd = dict(fid)
+				fd["duration"] = round(fid.info.length)
+				self.db[path.replace("\\", "/").replace(self.path, "")] = fd
 		self.__savedb()
 	def load(self):
 		self.__loaddb()

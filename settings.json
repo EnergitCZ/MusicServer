@@ -1,72 +1,119 @@
 {
 	"music_folder": "...",
 	"encoders": {
-		"ffmpeg_location": "PATH"
+		"ffmpeg_location": "PATH",
+		"exhale_location": "encoders/",
+		"fdkaac_location": "encoders/"
 	},
 	"presets": {
+		"wav_lossless": {
+			"codec": "pcm_s16le",
+			"format": "wav",
+			"contenttype": "audio/wav"
+		},
+		"256_opus": {
+			"codec": "libopus",
+			"bitrate": 256,
+			"format": "webm",
+			"contenttype": "audio/webm"
+		},
+		"256_aac": {
+			"codec": "libfdk_aac",
+			"bitrate": 256,
+			"format": "adts",
+			"contenttype": "audio/aac"
+		},
 		"160_opus": {
 			"codec": "libopus",
-			"bitrate": 160
+			"bitrate": 160,
+			"format": "webm",
+			"contenttype": "audio/webm"
 		}, 
 		"160_aac": {
 			"codec": "libfdk_aac",
-			"bitrate": 160
+			"bitrate": 160,
+			"format": "adts",
+			"contenttype": "audio/aac"
 		},
 		"128_opus": {
 			"codec": "libopus",
-			"bitrate": 128
+			"bitrate": 128,
+			"format": "webm",
+			"contenttype": "audio/webm"
 		},
 		"128_aac": {
 			"codec": "libfdk_aac",
-			"bitrate": 128
+			"bitrate": 128,
+			"format": "adts",
+			"contenttype": "audio/aac"
 		},
 		"96_opus": {
 			"codec": "libopus",
-			"bitrate": 96
+			"bitrate": 96,
+			"format": "webm",
+			"contenttype": "audio/webm"
 		},
 		"96_aac": {
 			"codec": "libfdk_aac",
-			"bitrate": 96
+			"bitrate": 96,
+			"format": "adts",
+			"contenttype": "audio/aac"
 		},
 		"64_opus": {
 			"codec": "libopus",
-			"bitrate": 64
+			"bitrate": 64,
+			"format": "webm",
+			"contenttype": "audio/webm"
 		},
 		"64_heaac": {
 			"codec": "libfdk_aac",
 			"profile": "aac_he",
-			"bitrate": 64
+			"bitrate": 64,
+			"format": "adts",
+			"contenttype": "audio/aac"
 		},
 		"32_opus_mono": {
 			"codec": "libopus",
 			"bitrate": 32,
-			"channels": 1
+			"channels": 1,
+			"format": "webm",
+			"contenttype": "audio/webm"
 		},
 		"32_heaac": {
 			"codec": "libfdk_aac",
 			"profile": "aac_he",
-			"bitrate": 32
+			"bitrate": 32,
+			"format": "adts",
+			"contenttype": "audio/aac"
 		},
 		"32_heaac_mono": {
 			"codec": "libfdk_aac",
 			"profile": "aac_he",
 			"bitrate": 32,
-			"channels": 1
+			"channels": 1,
+			"format": "adts",
+			"contenttype": "audio/aac"
 		},
 		"32_heaacv2": {
 			"codec": "libfdk_aac",
 			"profile": "aac_he_v2",
-			"bitrate": 32
+			"bitrate": 32,
+			"format": "adts",
+			"contenttype": "audio/aac"
 		},
 		"24_heaacv2": {
 			"codec": "libfdk_aac",
 			"profile": "aac_he_v2",
-			"bitrate": 24
+			"bitrate": 24,
+			"format": "adts",
+			"contenttype": "audio/aac"
 		},
 		"16_heaacv2": {
 			"codec": "libfdk_aac",
 			"profile": "aac_he_v2",
-			"bitrate": 16
+			"bitrate": 16,
+			"format": "adts",
+			"contenttype": "audio/aac"
 		}
 	}
 }

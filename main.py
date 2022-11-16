@@ -49,7 +49,8 @@ else:
 
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from urllib.parse import unquote
-
+from socketserver import ThreadingMixIn
+import threading
 import gc
 gc.collect()
 
@@ -73,11 +74,17 @@ class Handler(BaseHTTPRequestHandler):
 							break
 				success = True
 		elif self.path.startswith("/getEncFile/"): # Get song from database and encode it
-			presetsong = self.path.replace("/getEncFile/", "", 1).replace(".mp3.mka", ".mp3")
+			presetsong = self.path.replace("/getEncFile/", "", 1)
 			x = presetsong.find("/")
 			preset = presetsong[:x]
 			options = presets[preset]
-			opt = "-c:a {} -b:a {}k".format(options["codec"], options["bitrate"])
+			opt = "-c:a " + options["codec"]
+			optformat = "-f " + options["format"]
+			if options["format"] in ["ipod", "mp4"]:
+				optformat = "-frag_duration 3600 " + optformat
+			bitrate = options.get("bitrate")
+			if bitrate:
+				opt += " -b:a {}k".format(bitrate)
 			prof = options.get("profile")
 			if prof:
 				opt += " -profile:a {}".format(prof)
@@ -87,9 +94,10 @@ class Handler(BaseHTTPRequestHandler):
 			songpath = unquote(presetsong[x+1:])
 			filepath = os.path.join(musicf, songpath) # Get the path of the song
 			if os.path.exists(filepath):
-				p = ffmpeg.run_pipe(filepath, "-hide_banner -loglevel error " + opt + " -vn -f matroska") # Convert and put output to pipe
+				p = ffmpeg.run_pipe(filepath, "-hide_banner -loglevel quiet " + opt + " -vn " + optformat) # Convert and put output to pipe
 				self.send_response(200)
-				self.send_header("Content-Type", "audio/x-matroska")
+				self.send_header("Content-Type", options["contenttype"])
+				self.send_header("Connection", "close")
 				self.end_headers()
 				while True: # Read pipe and send it in chunks of 1024 bytes
 					chunk = p.stdout.read(64)
@@ -122,8 +130,11 @@ class Handler(BaseHTTPRequestHandler):
 			self.end_headers()
 		gc.collect()
 
-import subprocess
-subprocess.Popen(["python", "-m", "http.server", "--directory", "website", "80"])
+class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
+	pass
 
-ws = HTTPServer(("0.0.0.0", 2754), Handler)
-ws.serve_forever()
+if __name__ == '__main__':
+	import subprocess
+	subprocess.Popen(["python", "-m", "http.server", "--directory", "website", "80"])
+	ws = ThreadedHTTPServer(("0.0.0.0", 2754), Handler)
+	ws.serve_forever()
