@@ -75,7 +75,7 @@ class Handler(BaseHTTPRequestHandler):
 				p = ffmpeg.run_pipe(filepath, "-hide_banner -loglevel quiet " + opt + " -vn " + optformat) # Convert and put output to pipe
 				self.send_response(200)
 				self.send_header("Content-Type", options["contenttype"])
-				self.send_header("Connection", "close")
+				self.send_header("Connection", "keep-alive")
 				self.end_headers()
 				while True: # Read pipe and send it in chunks of 1024 bytes
 					chunk = p.stdout.read(64)
@@ -106,6 +106,7 @@ class Handler(BaseHTTPRequestHandler):
 		if not success:
 			self.send_response(404)
 			self.end_headers()
+		self.close_connection = True
 		gc.collect()
 
 class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
